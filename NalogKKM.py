@@ -110,12 +110,12 @@ def main_kkm():
         print('Файл "data_frame.xlsx" не требует обновления.')
 
     print('Введите кол-во дней, в пределах которых искать ККМ с истекающим сроком действия:  \n')
-    delta_day = main_input_number(2)
+    delta_day = main_input_number(2)   # функция ввода числа с контролем ошибок
     df_control = selection_df(df, delta_day)       # Подготовка датафрейма со списком ККМ, у которых истекает срок действия ФН
     list = listed_statement(df_control)
+    print(f'Весь список ККМ для замены ФН в ближайшие {delta_day} дней:')
+    for i in list: print(i[2])
     return (list)
-
-    #for i in list: print(i)
 
 if __name__ == '__main__':
     main_kkm()
