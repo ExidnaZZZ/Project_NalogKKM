@@ -114,7 +114,7 @@ def main_kkm():
     df_control = selection_df(df, delta_day)       # Подготовка датафрейма со списком ККМ, у которых истекает срок действия ФН
     list = listed_statement(df_control)
     print(f'Весь список ККМ для замены ФН в ближайшие {delta_day} дней:')
-    for i in list: print(i[2])
+    #for i in list: print(i[2])
     return (list)
 
 if __name__ == '__main__':
