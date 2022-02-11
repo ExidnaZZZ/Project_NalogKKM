@@ -13,7 +13,7 @@ bot = telebot.TeleBot("1519526915:AAGnz5H4khS2bD44CZKePX2pN4avbyOpkko", parse_mo
 def echo_all(message):                        #bot.message
     print('delta_day')
     df = pd.read_excel('data_frame.xlsx', dtype={'RNN': str, 'ZN_KKM': str})
-    delta_day = 25#message.text
+    delta_day = message.text
     print(delta_day)
     if delta_day.isdigit():
         delta_day = int(message.text)
