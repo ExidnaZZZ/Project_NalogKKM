@@ -1,31 +1,11 @@
 from NalogKKM import *
 from Mail_Python import *
 
-def main():
-    list_selected = main_kkm()
-    if len(list_selected) == 0:
-        print('В данный промежуток времени замена ФН не требуется.')
-        return
-    print(f'Требуется провести замену {len(list_selected)} фискальных накопителей. \n')
 
-    for l_temp in list_selected:
-    # name_kkm      - l_temp5[0]
-    # zn_kkm        - l_temp5[1]
-    # addres_KKM    - l_temp5[2]
-    # srok_fn       - l_temp5[3]
-        print(f'Отправить заявку на замену ФН на торговой точке \n по адресу: {l_temp[2]} \n\
- в ККМ {l_temp[0]} с заводским номером №{l_temp[1]} в срок до {l_temp[3]}? (нажмите "Да,Д,д+Enter")\n'
-                        f'(если заявка создана БЫЛА РАНЕЕ - нажмите "Enter", \n'
-                        f'если желаете ПРЕКРАТИТЬ выполнение программы, нажмите "пробел+Enter")')
-        request = input()
-        if request == "":
-            print(f'Заявка на замену ФН по адресу {l_temp[2]} не отправлена.\n')
-        elif (request.lower()[0] != "д"):
-            print('Выполнение программы прекращено...')
-            return
-        else:
-            main_send_mail(f'Замена ФН по адресу: {l_temp[2]} до {l_temp[3]}',  \
-f''' 	Последовательность действий:
+'''Функция text_letter формирует текст заявки из переданного списка с информацией по ККМ'''
+def text_letter(l_temp):
+    text = f''' 	
+Последовательность действий:
 Забрать ФН по адресу Новосибирск Линейная 31А.
 
 Произвести замену ФН на ККМ типа {l_temp[0]} 
@@ -59,11 +39,52 @@ IP: 185.170.204.91
 Имя: ООО <Эвотор ОФД>
 Система налогооблажения
 Общая (ОСН)
-На фото чеков обязательно должно быть видно всё, все цифры и т.д ''')
+На фото чеков обязательно должно быть видно всё, все цифры и т.д '''
+    return (text)
+
+'''Данная функция открывает файл "data_frame.xlsx" и ставит отметку о том, 
+что заявка на замену ФН в ККМ с заводским номером "zn_kkm" отправлена, 
+и рекомендовать данную ККМ для создания заявки больше не следует (отметка проставляется в столбце "Note") '''
+def check_KKM(zn_kkm):
+    from openpyxl import load_workbook
+    wb = load_workbook('data_frame.xlsx')  # открыть существующую книгу Excel
+    ws = wb.active
+    for temp in ws:
+        if(splin_zn(temp[8].value) == (zn_kkm)):
+            temp[10].value = "Yes"
+    wb.save('data_frame.xlsx')
+
+
+def main():
+    list_selected = main_kkm()
+    if len(list_selected) == 0:
+        print('В данный промежуток времени замена ФН не требуется.')
+        return
+    print(f'Требуется провести замену {len(list_selected)} фискальных накопителей. \n')
+    for l_temp in list_selected:
+                        # name_kkm      - l_temp[0]
+                        # zn_kkm        - l_temp[1]
+                        # addres_KKM    - l_temp[2]
+                        # srok_fn       - l_temp[3]
+                        # note          - l_temp[4] - если значение note равно 1,
+                                    # то заявка на замену ФН была сформирована и отправлена ранее
+        print(f'\033[1mОтправить заявку на замену ФН \033[0m \n'
+              f'на торговой точке по адресу: \033[1m {l_temp[2]} \033[0m \n\
+в ККМ {l_temp[0]} с заводским номером №{l_temp[1]} \033[1mсо сроком до {l_temp[3]} ? (нажмите "Да"+Enter")\033[0m\n'
+f'(если заявка создана БЫЛА РАНЕЕ - нажмите "Enter", \n'
+f'если желаете ПРЕКРАТИТЬ выполнение программы, нажмите "пробел+Enter")')
+        request = input()
+        if request == "":
+            print(f'Заявка на замену ФН по адресу {l_temp[2]} не отправлена.\n')
+        elif (request.lower()[0] != "д"):
+            print('Выполнение программы прекращено...')
+            return
+        else:
+            main_send_mail(f'Замена ФН по адресу: {l_temp[2]} до {l_temp[3]}',  text_letter(l_temp))
             print('Заявка отправлена на sd@erkapharm.com \n\n\n')
+            check_KKM(l_temp[1])  # данная функция ставит отметку о том, что по этой ККМ заявка на замену ФН отправлена
 
 
 if __name__ == '__main__':
     main()
 
-TODO: 'исключить ошибку отсутствия файла xlsx при проверке его даты создания'
