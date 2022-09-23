@@ -6,8 +6,8 @@ from os.path import basename   # функция basename(name_file) позвол
 
 def main_send_mail(theme_letter, text_letter):
     from_email = 'zerg_exidna@mail.ru'
-    recipients = ['exidna2@bk.ru', 'exidna3@bk.ru']
-                  #chernyshov.sp@erkapharm.com, exidna2@bk.ru
+    recipients = ['chernyshov.sp@erkapharm.com']
+                  #chernyshov.sp@erkapharm.com, exidna3@bk.ru, 'mironov.ai@erkapharm.com',
     #msg_simple = MIMEText('Проверка') #Тип MIMEText позвлояет отправлять сообщения в кириллице
     my_messenge = MIMEMultipart()  # Создаем переменную MIMEMultipart, в которую можно складывать
                             # всю информацию о нашем письме (адреса, тема, текст, картинки, html и т.д.

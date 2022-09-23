@@ -24,10 +24,8 @@ def connect_df():      # Функция для сбора всех файлов-
     name_file_all = pd.DataFrame()
     #name_file_all = pd.read_csv('Nalog_KKM/Sibirs2.csv', sep=';')
     for file in os.listdir('Nalog_KKM/'):
-            tmp = pd.read_csv('Nalog_KKM/' + file, sep=';',
-                              dtype={'Регистрационный номер': str,
-                                     'Заводской номер ККТ': str,
-                                     'Заводской номер ФН': str}) #Создаем DF так, чтобы не обрезать нули в номерах
+            print(file)
+            tmp = pd.read_csv('Nalog_KKM/' + file, sep=';') #Создаем DF так, чтобы не обрезать нули в номерах
             tmp.insert(0, 'Region', file[:-4])  # Вставляем столбец с наименованием юрлица
             name_file_all = pd.concat([name_file_all, tmp])
     name_file_all.reset_index(inplace=True, drop=True)
@@ -113,9 +111,12 @@ def main_kkm():
     if date_xlsx < date_nalog:
         print('Файл "data_frame.xlsx" обновляется....')
         df = connect_df().copy()  # Создаем рабочую копию DF используя функцию connect_df(),
+        print('123')
                                     # собирая один df из всех файлов-выгрузок. полученных из налоговой
         df = prepare_df(df)  # Обработка датафрейма с использованием функции prepare_df()
+        print('123')
         df.to_excel('data_frame.xlsx', index=False)  # Сохраняем датафрейм в файл Excel
+        print('123')
         print('Файл "data_frame.xlsx" обновлен')
         #print(df.info(), '\n\n')
     else:
@@ -126,7 +127,7 @@ def main_kkm():
     print('Введите кол-во дней, в пределах которых искать ККМ с истекающим сроком действия:  \n')
     delta_day = main_input_number(2)   # функция ввода числа с контролем ошибок
     df_control = selection_df(df, delta_day)       # Подготовка датафрейма со списком ККМ, у которых истекает срок действия ФН
-    list = listed_statement(df_control)
+    list = listed_statement(df_control) #Функция преобразования датафрейма df_control в лист с удобочитаемым адресом
     print(f'Весь список ККМ для замены ФН в ближайшие {delta_day} дней:')
     for i in list: print(i[2])
     return (list)
