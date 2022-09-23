@@ -24,8 +24,10 @@ def connect_df():      # Функция для сбора всех файлов-
     name_file_all = pd.DataFrame()
     #name_file_all = pd.read_csv('Nalog_KKM/Sibirs2.csv', sep=';')
     for file in os.listdir('Nalog_KKM/'):
-            print(file)
-            tmp = pd.read_csv('Nalog_KKM/' + file, sep=';') #Создаем DF так, чтобы не обрезать нули в номерах
+            tmp = pd.read_csv('Nalog_KKM/' + file, sep=';',
+                              dtype={'Регистрационный номер': str,
+                                     'Заводской номер ККТ': str,
+                                     'Заводской номер ФН': str}) #Создаем DF так, чтобы не обрезать нули в номерах
             tmp.insert(0, 'Region', file[:-4])  # Вставляем столбец с наименованием юрлица
             name_file_all = pd.concat([name_file_all, tmp])
     name_file_all.reset_index(inplace=True, drop=True)
